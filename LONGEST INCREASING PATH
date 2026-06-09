@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+class Solution { 
+public: 
+    const int diff[4][2] = {{0,-1},{0,1},{-1,0},{1,0}}; 
+    int dfs(vector<vector<int>>& matrix, vector<vector<int>>& dp, int R, int C, int row, int col){ 
+        if(dp[row][col] != 0){ 
+            return dp[row][col]; 
+        } 
+        int adjMax = 0; 
+        for(int i = 0; i < 4; i++){ 
+            int ar = row + diff[i][0]; 
+            int ac = col + diff[i][1]; 
+            if(ar >= 0 && ar < R && ac >= 0 && ac < C && matrix[ar][ac] > matrix[row][col]){ 
+                adjMax = max(adjMax, dfs(matrix, dp, R, C, ar, ac)); 
+            } 
+        } 
+        dp[row][col] = 1 + adjMax; 
+        return 1 + adjMax; 
+    } 
+    
+    int longestIncreasingPath(vector<vector<int>>& matrix) { 
+        if(matrix.empty() || matrix[0].empty()) return 0;
+        int R = matrix.size(); 
+        int C = matrix[0].size(); 
+        vector<vector<int>> dp(R, vector<int>(C, 0)); 
+        int maxlen = 0; 
+        for(int row = 0; row < R; row++){ 
+            for(int col = 0; col < C; col++){ 
+                maxlen = max(maxlen, dfs(matrix, dp, R, C, row, col)); 
+            } 
+        } 
+        return maxlen; 
+    } 
+};
+
+int main() {
+    int rows, cols;
+cout << "ENTER THE NUMBER OF ROWS: ";
+    cin >> rows;
+    cout << "ENTER THE NUMBER OF COLUMNS: ";
+    cin >> cols;
+ vector<vector<int>> matrix(rows, vector<int>(cols));
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            cin >> matrix[i][j];
+        }
+    }
+    Solution solution;
+    int result = solution.longestIncreasingPath(matrix);
+    cout << "\nLONGEST INCREASING PATH: " << result << endl;
+
+    return 0;
+}
